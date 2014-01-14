@@ -1,0 +1,40 @@
+body {
+    background-color: rgb(225,225,225);
+}
+
+header {
+    background-color: rgba(50,50,50,.8);
+}
+
+header ul {
+    list-style-type: none;
+    margin:0;
+    padding:0;
+    overflow: hidden;
+    color: white;
+    font-size: 1.4rem;
+}
+
+header li {
+    padding: 1rem;
+    float: left;
+}
+
+#container {
+}
+
+#content {
+    width: 980px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#sheet {
+    height: 520px;
+    width: 980px;
+    margin-top: 10%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white; 
+    box-shadow: 0px 0px 5px 1px rgba(0,0,0,.5);
+}
