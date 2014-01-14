@@ -6,7 +6,13 @@ header {
     background-color: rgba(50,50,50,.8);
 }
 
-header ul {
+nav {
+    width: 980;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+nav ul {
     list-style-type: none;
     margin:0;
     padding:0;
@@ -15,7 +21,7 @@ header ul {
     font-size: 1.4rem;
 }
 
-header li {
+nav li {
     padding: 1rem;
     float: left;
 }
@@ -24,14 +30,15 @@ header li {
 }
 
 #content {
-    width: 980px;
+    width: 960px;
     margin-left: auto;
     margin-right: auto;
 }
 
 #sheet {
-    height: 520px;
-    width: 980px;
+    height: 500px;
+    width: 500px;
+    display:block;
     margin-top: 10%;
     margin-left: auto;
     margin-right: auto;
