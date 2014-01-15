@@ -16,8 +16,8 @@
                     <li>Adjustments</li>
                     <li>Effects</li>
                     <li>Utilities</li>
-                    <li>Window</li>
-                    <li>Help</li>
+                    <li value="save" onclick="save()">Save</li>
+                    <li value="clear" onclick="erase()">Clear</li>
                 </ul>
             </nav>
         </header>
@@ -28,7 +28,7 @@
                 <input type="button" value="save" id="btn" size="30" onclick="save()">
                 <input type="button" value="clear" id="clr" size="23" onclick="erase()">
 -->
-                <canvas id="sheet"/>
+                <canvas id="sheet" width="500px" height="500px"/>
             </div>
         </div>
         <script type="text/javascript" src="assests/javascript/pencil.js"></script>

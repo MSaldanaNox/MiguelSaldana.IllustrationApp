@@ -5,8 +5,8 @@ var canvas, ctx, flag = false,
     currY = 0,
     dot_flag = false;
 
-var x = "black",
-    y = 2;
+var lineColor = "black",
+    y = 1;
 
 function init() {
     canvas = document.getElementById('sheet');
@@ -31,29 +31,29 @@ function init() {
 function color(obj) {
     switch (obj.id) {
         case "green":
-            x = "green";
+            lineColor = "green";
             break;
         case "blue":
-            x = "blue";
+            lineColor = "blue";
             break;
         case "red":
-            x = "red";
+            lineColor = "red";
             break;
         case "yellow":
-            x = "yellow";
+            lineColor = "yellow";
             break;
         case "orange":
-            x = "orange";
+            lineColor = "orange";
             break;
         case "black":
-            x = "black";
+            lineColor = "black";
             break;
         case "white":
-            x = "white";
+            lineColor = "white";
             break;
     }
     if (x == "white") y = 14;
-    else y = 2;
+    else y = 1;
 
 }
 
@@ -61,14 +61,15 @@ function draw() {
     ctx.beginPath();
     ctx.moveTo(prevX, prevY);
     ctx.lineTo(currX, currY);
-    ctx.strokeStyle = x;
+    console.log(currX+','+currY);
+    ctx.strokeStyle = lineColor;
     ctx.lineWidth = y;
     ctx.stroke();
     ctx.closePath();
 }
 
 function erase() {
-    var m = confirm("Want to clear");
+    var m = confirm("Clear canvas of current work?");
     if (m) {
         ctx.clearRect(0, 0, w, h);
         document.getElementById("canvasimg").style.display = "none";
@@ -76,10 +77,11 @@ function erase() {
 }
 
 function save() {
-    document.getElementById("canvasimg").style.border = "2px solid";
-    var dataURL = canvas.toDataURL();
-    document.getElementById("canvasimg").src = dataURL;
-    document.getElementById("canvasimg").style.display = "inline";
+    var toSave = document.getElementById("mycanvas");
+    var img = canvas.toDataURL("image/png");
+    
+    var window = window.open();
+    window.document.write('<img src="'+img+'"/>');
 }
 
 function findxy(res, e) {
@@ -106,9 +108,10 @@ function findxy(res, e) {
         if (flag) {
             prevX = currX;
             prevY = currY;
-            currX = e.pageX - canvas.offsetLeft;
-            currY = e.pageY - canvas.offsetTop;
+            currX = (e.pageX - canvas.offsetLeft);
+            currY = (e.pageY - canvas.offsetTop);
             draw();
         }
     }
+    
 }
