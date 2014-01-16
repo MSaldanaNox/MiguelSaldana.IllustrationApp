@@ -5,6 +5,9 @@ body {
 header {
 /*    background-color: rgba(50,50,50,.8);*/
     background: linear-gradient(rgb(120,120,120),rgb(50,50,50));
+    width: 100%;
+    position:fixed;
+    top: 0;
 }
 
 nav {
@@ -48,6 +51,7 @@ nav li:hover {
 #sheet {
     height: 500px;
     width: 500px;
+    cursor: url(../../assests/images/pen.png),auto;
     display:block;
     margin-top: 10%;
     margin-left: auto;
@@ -55,4 +59,50 @@ nav li:hover {
     background-color: rgba(255,255,255,1); 
     border: 1px solid rgba(0,0,0,.5);
     box-shadow: 0px 0px 5px 1px rgba(0,0,0,.5);
+}
+
+#toolbar {
+    position: absolute;
+    left: 0;
+    width: 100px;
+    background-color: rgba(150,150,150,1);
+    display: inline-block;
+    border-top: 3px solid rgba(255,255,255,.5);
+    border-right: 3px solid rgba(150,150,150,.3);
+    border-bottom: 3px solid rgba(150,150,150,.6);
+    border-left: 3px solid rgba(255,255,255,.75);
+}
+
+.tool {
+    height: 50px;
+    width: 50px;
+    cursor: pointer;
+    float: left;
+    box-shadow: 3px 3px 15px 1px rgba(125,125,125,.75) inset;
+}
+
+.tool:hover {
+    background-color: rgba(175,175,175,1);
+}
+
+#pencil {
+    background-image: url(../../assests/images/pen.png);
+    background-position:center;
+    background-repeat: no-repeat;
+}
+
+#colorTag{
+    padding-top: 10px;
+    width: 100px;
+    color: white;
+}
+
+#colorHex  {
+    width: 100px;
+}
+
+#color {
+    width: 100px;
+    height: 20px;
+    background-color: black;
 }

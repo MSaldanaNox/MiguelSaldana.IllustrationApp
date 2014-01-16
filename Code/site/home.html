@@ -21,16 +21,30 @@
                 </ul>
             </nav>
         </header>
+        
         <div id="container">
+            <div id="toolbar">
+                <div class="tool" id="pencil"></div>
+                <div class="tool"></div>
+                <div class="tool"></div>
+                <div class="tool"></div>
+                <div class="tool"></div>
+                <div class="tool"></div>
+                <div class="tool"></div>
+                <div class="tool"></div>
+                <div class="tool"></div>
+                <div class="tool"></div>
+                <div id="colorTag">HexCode</div>
+                <input id="colorHex" type="text" placeholder="000000" maxlength="6" oninput="color(this)">
+                <div id="color"></div>
+            </div>
+            </div>
+            
             <div id="content">
-<!--
-                <img id="sheetimg" style="display:none;">
-                <input type="button" value="save" id="btn" size="30" onclick="save()">
-                <input type="button" value="clear" id="clr" size="23" onclick="erase()">
--->
                 <canvas id="sheet" width="500px" height="500px"/>
             </div>
         </div>
+        
         <script type="text/javascript" src="assests/javascript/canvas_pencil.js"></script>
         <script type="text/javascript" src="assests/javascript/canvas_state.js"></script>
     </body>

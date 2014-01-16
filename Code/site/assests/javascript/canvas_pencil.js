@@ -5,7 +5,7 @@ var canvas, context, flag = false,
     currY = 0,
     dot_flag = false;
 
-var lineColor = "black",
+var lineColor = "blue",
     lineWidth = 1;
 
 function init() {
@@ -13,7 +13,8 @@ function init() {
     context = canvas.getContext("2d");
     width = canvas.width;
     height = canvas.height;
-
+    var setDefault = document.getElementById('color');
+    
     canvas.addEventListener("mousemove", function (e) {
         findxy('move', e)
     }, false);
@@ -29,30 +30,16 @@ function init() {
 }
 
 function color(obj) {
-    switch (obj.id) {
-        case "green":
-            lineColor = "green";
-            break;
-        case "blue":
-            lineColor = "blue";
-            break;
-        case "red":
-            lineColor = "red";
-            break;
-        case "yellow":
-            lineColor = "yellow";
-            break;
-        case "orange":
-            lineColor = "orange";
-            break;
-        case "black":
-            lineColor = "black";
-            break;
-        case "white":
-            lineColor = "white";
-            break;
+    var toHex = obj.value;
+    var colorDiv = document.getElementById('color');
+    while(toHex.length < 6)
+    {
+        toHex += "0";
     }
-
+    
+    lineColor = "#"+toHex;
+    colorDiv.style.backgroundColor = "#"+toHex;
+    console.log(toHex)
 }
 
 function draw() {
