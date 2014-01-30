@@ -10,6 +10,11 @@ function erase() {
 
 function save() {
     var toSave = document.getElementById("sheet");
-    var img = toSave.toDataURL();
+    var imgType = "image/PNG";
+    var imgDownload = "image/octet-stream";
+    var img = toSave.toDataURL(imgType);
     window.open(img, "toDataUrl() image", "width=500, height=500");
+    content.Headers.Add("Content-Disposition", "attachment; filename=export.csv");
+    document.location.href = img.replace(imgType, imgDownload);
+//    Canvas2Image.saveAsJPEG(toSave, true);
 }
