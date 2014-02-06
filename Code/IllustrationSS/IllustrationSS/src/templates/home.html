@@ -20,10 +20,9 @@
                     <li>Utilities</li>
                 </ul>
             </nav>
-            <!-- <form action="saveImage" method="post">{% csrf_token %} -->
-            	<input type="button" value="Save" onclick="save()"/>
-            <!-- </form> -->
-            <input type="button"  value="Clear" onclick="erase()"/>
+            <input type="button" value="Save Image" onclick="save()"/>
+            <input id="imageLoader" type="file" value="Load Image"/>
+            <input type="button"  value="Clear Canvas" onclick="erase()"/>
         </header>
         
         <div id="container">
@@ -45,13 +44,12 @@
             </div>
             
             <div id="content">
-                <canvas id="sheet" width="500px" height="500px"/>
+                <canvas id="sheet"/>
                 <input id="hidden_image_field"type="hidden" value="">
             </div>
         </div>
         
         <script type="text/javascript" src="{% static "javascript/canvas_pencil.js" %}"></script>
-        <script type="text/javascript" src="{% static "javascript/canvas_state.js" %}"></script>
         <script type="text/javascript" src="{% static "javascript/canvas2image.js" %}"></script>
         <script type="text/javascript" src="{% static "javascript/base64.js" %}"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>

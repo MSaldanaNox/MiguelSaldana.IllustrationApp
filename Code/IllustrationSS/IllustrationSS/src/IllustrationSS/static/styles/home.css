@@ -49,8 +49,6 @@ nav li:hover {
 }
 
 #sheet {
-    height: 500px;
-    width: 500px;
     cursor: url(/static/images/pen.png),auto;
     display:block;
     margin-top: 10%;
