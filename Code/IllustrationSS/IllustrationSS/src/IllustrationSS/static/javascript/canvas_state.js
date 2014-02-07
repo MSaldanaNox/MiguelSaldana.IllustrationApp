@@ -30,7 +30,6 @@ function save() {
 }
 
 function load() {
-	console.log('SO');
 	var canvas = document.getElementById('sheet');
 	var ctx = canvas.getContext('2d');
     var reader = new FileReader();
