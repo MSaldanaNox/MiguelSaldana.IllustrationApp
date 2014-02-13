@@ -22,7 +22,14 @@
             </nav>
             <input type="button" value="Save Image" onclick="save()"/>
             <input id="imageLoader" type="file" value="Load Image"/>
-            <input type="button"  value="Clear Canvas" onclick="erase()"/>
+            <div id="layerControls">
+		        <input type="button" value="Add Layer" onclick="addLayer()"/>
+		        <input type="button" value="Delete Layer" onclick="deleteLayer()"/>
+		        <input type="button" value="Move Layer Up" onclick="moveLayerUp()"/>
+		        <input type="button" value="Move Layer Down" onclick="moveLayerDown()"/>
+		        <input type="button" value="Undo" onclick="undo()"/>
+		        <input type="button" value="Redo" onclick="redo()"/>
+	        </div>
         </header>
         
         <div id="container">
@@ -51,7 +58,8 @@
         
         <script type="text/javascript" src="{% static "javascript/canvas_pencil.js" %}"></script>
         <script type="text/javascript" src="{% static "javascript/canvas2image.js" %}"></script>
+        <script type="text/javascript" src="{% static "javascript/canvaslayers.js" %}"></script>
         <script type="text/javascript" src="{% static "javascript/base64.js" %}"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->
     </body>
 </html>

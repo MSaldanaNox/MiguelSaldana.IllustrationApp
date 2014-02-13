@@ -1,4 +1,4 @@
-var canvas, context, flag = false,
+var canvas, context, container, activeLayer, currentIndex, history, redoStack, flag = false,
     prevX = 0,
     currX = 0,
     prevY = 0,
@@ -10,6 +10,12 @@ var lineColor = "blue",
 
 function init() {
     canvas = document.getElementById('sheet');
+    container = new CanvasLayers.Container(canvas, false);
+    history = new Array();
+    redoStack = new Array();
+    history.push(document.getElementById('sheet').toDataURL());
+    activeLayer = canvas;
+    currentindex = 0;
     canvas.width = 500;
     canvas.height = 500;
     context = canvas.getContext("2d");
@@ -78,6 +84,8 @@ function findxy(res, e) {
     }
     if (res == 'up' || res == "out") {
         flag = false;
+        if(res == 'up')
+        	saveInstance();
     }
     if (res == 'move') {
         if (flag) {
@@ -89,15 +97,6 @@ function findxy(res, e) {
         }
     }
     
-}
-
-function erase() {
-    var toDelete = document.getElementById("sheet");
-    var img = toDelete.getContext('2d');
-    var m = confirm("Clear canvas of current work?");
-    if (m) {
-        img.clearRect(0, 0, toDelete.width, toDelete.height);
-    }
 }
 
 function save() {
@@ -114,29 +113,23 @@ function save() {
 			data: { 
 			   imgBase64: dataURL
 			}
-//		}).done(function(o) {
-//			var toSave = o;
-//		    var imgType = "image/png";
-//		    var imgDownload = "image/octet-stream";
-//		    document.location.href = toSave.replace(imgType, imgDownload);
 		});
 }
 
 function load(e) {
-	console.log('SO');
-	var canvas = document.getElementById('sheet');
-	var ctx = canvas.getContext('2d');
     var reader = new FileReader();
     reader.onload = function(event){
         var img = new Image();
         img.onload = function(){
             canvas.width = img.width;
             canvas.height = img.height;
-            ctx.drawImage(img,0,0);
+            context.drawImage(img,0,0);
+            saveInstance();
         }
         img.src = event.target.result;
     }
     reader.readAsDataURL(e.target.files[0]);
+
 }
 
 function getCookie(name) {
@@ -154,3 +147,116 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+function saveInstance()
+{
+	history.push(document.getElementById('sheet').toDataURL());
+	console.log('saved');
+	console.log(history[history.length-1]);
+	if(redoStack.length > 0)
+	{
+		redoStack.splice(0,redoStack.length);
+	}
+}
+
+function undo()
+{
+	if(history.length > 1)
+	{
+		var toRedo = history.pop();
+		var img = new Image();
+		img.src = history[history.length-1];
+		canvas.width = canvas.width;
+		context.drawImage(img, 0,0);
+		redoStack.push(toRedo);
+		console.log(toRedo)
+		console.log('undo:'+history.length);
+	}
+}
+
+function redo()
+{
+	if(redoStack.length > 0)
+	{
+		var toHistory = redoStack.pop();
+		var img = new Image();
+		img.src = toHistory;
+		console.log(toHistory);
+		canvas.width = canvas.width;
+		context.drawImage(img, 0,0);
+		history.push(toHistory);
+	}
+}
+
+function addLayer()	{
+	var layerToAdd = new CanvasLayers.Layer(0,0,canvas.width,canvas.height);
+	container.getChildren().add(layerToAdd);
+	
+	var num = Math.floor((Math.random()*999999));
+	var hex = ''+num;
+	while(hex.length<6)
+	{
+		hex = '0'+hex;
+	}
+	context.fillStyle = hex;
+    context.fillRect(0, 0, layerToAdd.getWidth(), layerToAdd.getHeight());
+	activeLayer = layerToAdd;
+	currentIndex = container.getChildren().list.length-1;
+	saveInstance();
+}
+
+function deleteLayer() {
+	var layerCollection = container.getChildren();
+	var layerArray = layerCollection.list;
+	
+	if(layerArray.length > 0)
+	{
+		console.log(currentIndex);
+		console.log(layerArray[currentIndex]);
+		layerArray[currentIndex].close();
+		console.log(layerArray[currentIndex]);
+		if(currentIndex!=0)
+			currentIndex = currentIndex-1;
+		container.redraw();
+		saveInstance();
+	}
+}
+
+function moveLayerUp()
+{
+	var layerCollection = container.getChildren();
+	var layerArray = layerCollection.list;
+	
+	if(currentIndex!=layerArray.length-1)
+	{
+		var temp = layerArray[currentIndex];
+		temp.hide();
+		layerArray[currentIndex] = layerArray[currentIndex+1];
+		layerArray[currentIndex].hide();
+		layerArray[currentIndex+1] = temp;
+		layerArray[currentIndex+1].show();
+		layerArray[currentIndex].show();
+		container.redraw();
+		saveInstance();
+	}
+}
+
+function moveLayerDown()
+{
+	var layerCollection = container.getChildren();
+	var layerArray = layerCollection.list;
+	
+	if(currentIndex!=0)
+	{
+		var temp = layerArray[currentIndex];
+		temp.hide();
+		layerArray[currentIndex] = layerArray[currentIndex-1];
+		layerArray[currentIndex].hide();
+		layerArray[currentIndex-1] = temp;
+		layerArray[currentIndex-1].show();
+		layerArray[currentIndex].show();
+		container.redraw();
+		saveInstance();
+	}
+}
+
