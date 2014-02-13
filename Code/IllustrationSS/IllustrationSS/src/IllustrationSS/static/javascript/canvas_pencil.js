@@ -6,7 +6,7 @@ var canvas, context, container, activeLayer, currentIndex, history, redoStack, f
     dot_flag = false;
 
 var lineColor = "blue",
-    lineWidth = 1;
+    lineWidth = 5;
 
 function init() {
     canvas = document.getElementById('sheet');
@@ -50,7 +50,6 @@ function color(obj) {
     
     lineColor = "#"+toHex;
     colorDiv.style.backgroundColor = "#"+toHex;
-    console.log(toHex)
 }
 
 function draw() {
@@ -100,7 +99,6 @@ function findxy(res, e) {
 }
 
 function save() {
-	console.log('idjaoisdj')
 	var dataURL = document.getElementById('sheet').toDataURL();
 	hiddenField = dataURL;
 	var csrftoken = getCookie('csrftoken');
@@ -151,8 +149,6 @@ function getCookie(name) {
 function saveInstance()
 {
 	history.push(document.getElementById('sheet').toDataURL());
-	console.log('saved');
-	console.log(history[history.length-1]);
 	if(redoStack.length > 0)
 	{
 		redoStack.splice(0,redoStack.length);
@@ -169,8 +165,6 @@ function undo()
 		canvas.width = canvas.width;
 		context.drawImage(img, 0,0);
 		redoStack.push(toRedo);
-		console.log(toRedo)
-		console.log('undo:'+history.length);
 	}
 }
 
@@ -181,7 +175,6 @@ function redo()
 		var toHistory = redoStack.pop();
 		var img = new Image();
 		img.src = toHistory;
-		console.log(toHistory);
 		canvas.width = canvas.width;
 		context.drawImage(img, 0,0);
 		history.push(toHistory);
@@ -192,14 +185,14 @@ function addLayer()	{
 	var layerToAdd = new CanvasLayers.Layer(0,0,canvas.width,canvas.height);
 	container.getChildren().add(layerToAdd);
 	
-	var num = Math.floor((Math.random()*999999));
-	var hex = ''+num;
-	while(hex.length<6)
-	{
-		hex = '0'+hex;
-	}
-	context.fillStyle = hex;
-    context.fillRect(0, 0, layerToAdd.getWidth(), layerToAdd.getHeight());
+//	var num = Math.floor((Math.random()*999999));
+//	var hex = ''+num;
+//	while(hex.length<6)
+//	{
+//		hex = '0'+hex;
+//	}
+//	context.fillStyle = hex;
+//    context.fillRect(0, 0, layerToAdd.getWidth(), layerToAdd.getHeight());
 	activeLayer = layerToAdd;
 	currentIndex = container.getChildren().list.length-1;
 	saveInstance();
@@ -211,10 +204,7 @@ function deleteLayer() {
 	
 	if(layerArray.length > 0)
 	{
-		console.log(currentIndex);
-		console.log(layerArray[currentIndex]);
 		layerArray[currentIndex].close();
-		console.log(layerArray[currentIndex]);
 		if(currentIndex!=0)
 			currentIndex = currentIndex-1;
 		container.redraw();

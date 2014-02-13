@@ -18,6 +18,7 @@ def saveImage(request):
     if request.POST:
         dataUrlPattern = re.compile('data:image/(png|jpeg);base64,(.*)$')
         ImageData = request.POST.get('imgBase64')
+        print(ImageData);
         ImageData = dataUrlPattern.match(ImageData).group(2)
         
         # If none or len 0, means illegal image data
