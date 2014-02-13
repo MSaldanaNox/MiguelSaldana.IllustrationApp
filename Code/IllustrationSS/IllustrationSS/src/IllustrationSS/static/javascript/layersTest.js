@@ -28,8 +28,63 @@ function init() {
     }
 
     layer2.lowerToBottom();
-
     var timer = setInterval("changeScene()", 10);
+}
+
+function addLayer()	{
+	var layerToAdd = new CanvasLayers.Layer(0,0,400,400);
+	container.getChildren().add(layerToAdd);
+	var context = canvas.getContext("2d");
+	
+	var num = Math.floor((Math.random()*999999));
+	var hex = ''+num;
+	while(hex.length<6)
+	{
+		hex = '0'+hex;
+	}
+	context.fillStyle = hex;
+    context.fillRect(0, 0, layerToAdd.getWidth(), layerToAdd.getHeight());
+	
+}
+
+function deleteLayer() {
+	var layerCollection = container.getChildren();
+	var layerArray = layerCollection.list;
+	console.log(layerArray[0]);
+	layerArray[layerArray.length-1].close();
+}
+
+function moveLayerUp()
+{
+	var layerCollection = container.getChildren();
+	var layerArray = layerCollection.list;
+	var currentIndex = layerArray.length-2;
+	
+	var temp = layerArray[currentIndex];
+	console.log()
+	temp.hide();
+	layerArray[currentIndex] = layerArray[currentIndex+1];
+	layerArray[currentIndex].hide();
+	layerArray[currentIndex+1] = temp;
+	layerArray[currentIndex+1].show();
+	layerArray[currentIndex].show();
+	container.redraw();
+}
+
+function moveLayerDown()
+{
+	var layerCollection = container.getChildren();
+	var layerArray = layerCollection.list;
+	var currentIndex = layerArray.length-1;
+	
+	var temp = layerArray[currentIndex];
+	temp.hide();
+	layerArray[currentIndex] = layerArray[currentIndex-1];
+	layerArray[currentIndex].hide();
+	layerArray[currentIndex-1] = temp;
+	layerArray[currentIndex-1].show();
+	layerArray[currentIndex].show();
+	container.redraw();
 }
 
 function changeScene() {

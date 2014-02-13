@@ -11,5 +11,6 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^$', 'MyIllustration.views.home', name='home'),
+    url(r'test', 'MyIllustration.views.test', name='test'),
     url(r'saveImage', 'MyIllustration.views.saveImage', name='saveImage'),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

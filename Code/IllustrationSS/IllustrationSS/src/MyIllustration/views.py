@@ -11,7 +11,8 @@ import os
 # Create your views here.
 def home(request):
     return render(request, 'home.html')
-
+def test(request):
+    return render(request, 'layersTest.html')
 
 def saveImage(request):
     if request.POST:

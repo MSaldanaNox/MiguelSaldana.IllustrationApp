@@ -1,10 +1,19 @@
 <html>
     <head>
-        <script type="text/javascript" src="assests/javascript/canvaslayers.js"></script>
-        <script type="text/javascript" src="assests/javascript/layersTest.js"></script>
+    	{% load staticfiles %}
+    	<link rel="stylesheet" type="text/css" href="{% static "styles/layersTest.css" %}"/>
     </head>
 
     <body onload="init()">
         <canvas id="canvas" width="400" height="400">No canvas support</canvas>
+        
+        <div id="layerControls">
+	        <input type="button" value="Add Layer" onclick="addLayer()"/>
+	        <input type="button" value="Delete Layer" onclick="deleteLayer()"/>
+	        <input type="button" value="Move Layer Up" onclick="moveLayerUp()"/>
+	        <input type="button" value="Move Layer Down" onclick="moveLayerDown()"/>
+        </div>
+        <script type="text/javascript" src="{% static "javascript/canvaslayers.js" %}"></script>
+        <script type="text/javascript" src="{% static "javascript/layersTest.js" %}"></script>
     </body>
 </html>

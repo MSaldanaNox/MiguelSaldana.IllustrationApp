@@ -968,7 +968,7 @@ CanvasLayers.Layer.prototype.getMinChildX = function() {
  * @return The minimum y co-ordinte available to a child layer.
  */
 CanvasLayers.Layer.prototype.getMinChildY = function() {
-	if (this.permeable) return - Number.MAX_VALUE;
+	if (this.permeable) return -Number.MAX_VALUE;
 	return 0;
 }
 

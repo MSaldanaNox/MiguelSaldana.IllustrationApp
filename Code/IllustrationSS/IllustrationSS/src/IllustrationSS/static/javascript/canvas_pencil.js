@@ -101,6 +101,7 @@ function erase() {
 }
 
 function save() {
+	console.log('idjaoisdj')
 	var dataURL = document.getElementById('sheet').toDataURL();
 	hiddenField = dataURL;
 	var csrftoken = getCookie('csrftoken');
@@ -112,9 +113,7 @@ function save() {
 			url: "/saveImage",
 			data: { 
 			   imgBase64: dataURL
-			}.done(function(){
-				console.log('logged');
-			})
+			}
 //		}).done(function(o) {
 //			var toSave = o;
 //		    var imgType = "image/png";
