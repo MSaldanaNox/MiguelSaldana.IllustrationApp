@@ -9,18 +9,33 @@ var lineColor = "blue",
     lineWidth = 5;
 
 function init() {
-    canvas = document.getElementById('sheet');
-    container = new CanvasLayers.Container(canvas, false);
+    canvas = document.getElementById("sheet");
+    
     history = new Array();
     redoStack = new Array();
     history.push(document.getElementById('sheet').toDataURL());
     activeLayer = canvas;
-    currentindex = 0;
+    currentIndex = 0;
     canvas.width = 500;
     canvas.height = 500;
     context = canvas.getContext("2d");
     width = canvas.width;
     height = canvas.height;
+    
+    container = new CanvasLayers.Container(canvas, false);
+    container.onRender = function(layer, rect, con) {
+        con.fillStyle = '#FFF';
+        con.fillRect(0, 0, layer.getWidth(), layer.getHeight());
+    }
+    
+    activeLayer = new CanvasLayers.Layer(0, 0, width, height);
+    container.getChildren().add(activeLayer);
+
+    activeLayer.onRender = function(layer, rect, con) {
+        con.fillStyle = '#454545';
+        con.fillRect(0, 0, layer.getWidth(), layer.getHeight());
+    }
+    
     var setDefault = document.getElementById('color');
 
     var imageLoader = document.getElementById('imageLoader');
@@ -38,6 +53,7 @@ function init() {
     canvas.addEventListener("mouseout", function (e) {
         findxy('out', e)
     }, false);
+    container.redraw();
 }
 
 function color(obj) {
@@ -195,6 +211,7 @@ function addLayer()	{
 //    context.fillRect(0, 0, layerToAdd.getWidth(), layerToAdd.getHeight());
 	activeLayer = layerToAdd;
 	currentIndex = container.getChildren().list.length-1;
+	console.log(container.getChildren().list[currentIndex]);
 	saveInstance();
 }
 
@@ -204,12 +221,15 @@ function deleteLayer() {
 	
 	if(layerArray.length > 0)
 	{
-		layerArray[currentIndex].close();
+		console.log(layerCollection);
+		console.log(layerArray);
+		console.log(currentIndex)
 		if(currentIndex!=0)
 			currentIndex = currentIndex-1;
-		container.redraw();
+		layerArray[currentIndex].close();
 		saveInstance();
 	}
+	container.redraw();
 }
 
 function moveLayerUp()
