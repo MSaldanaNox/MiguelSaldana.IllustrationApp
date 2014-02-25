@@ -1,0 +1,10 @@
+#layerControls
+{
+	width:125px;
+	display: inline-block;
+}
+
+#layerControls input
+{
+	float: left;
+}

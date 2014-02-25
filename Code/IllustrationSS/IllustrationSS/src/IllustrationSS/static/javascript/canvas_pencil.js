@@ -106,6 +106,7 @@ function brush() {
     var circleRadius = lineWidth/2;
     context.fillStyle = lineColor;
     context.arc(currX-circleRadius,currY-circleRadius,circleRadius,0,2*Math.PI);
+    
     context.fill();
     context.closePath();
 }

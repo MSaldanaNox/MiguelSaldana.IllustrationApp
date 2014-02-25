@@ -49,7 +49,7 @@ nav li:hover {
 }
 
 #sheet {
-    cursor: url(/static/images/pen.png),auto;
+    cursor: url(/static/images/PaintBrush.png),auto;
     display:block;
     margin-top: 10%;
     margin-left: auto;
