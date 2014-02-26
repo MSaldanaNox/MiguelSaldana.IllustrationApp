@@ -1,4 +1,4 @@
-var canvas, context, container, activeLayer, currentIndex, history, redoStack, ppts, mouse, last_mouse, flag = false,
+var canvas, context, container, activeLayer, currentIndex, history, redoStack, flag = false,
     prevX = 0,
     currX = 0,
     prevY = 0,
@@ -41,10 +41,6 @@ function init() {
     var imageLoader = document.getElementById('imageLoader');
     imageLoader.addEventListener('change', load, false);
     
-    ppts = [];
-    mouse = {x: 0, y: 0};
-	last_mouse = {x: 0, y: 0};
-    
     canvas.addEventListener("mousemove", function (e) {
         findxy('move', e)
     }, false);
@@ -80,25 +76,6 @@ function pencil() {
     context.lineWidth = lineWidth;
     context.closePath();
     context.stroke();
-    
-    context.beginPath();
-    context.moveTo(ppts[0].x, ppts[0].y);
-     
-    for (var i = 1; i < ppts.length - 2; i++) {
-        var c = (ppts[i].x + ppts[i + 1].x) / 2;
-        var d = (ppts[i].y + ppts[i + 1].y) / 2;
-     
-        context.quadraticCurveTo(ppts[i].x, ppts[i].y, c, d);
-    }
-     
-    // For the last 2 points
-    context.quadraticCurveTo(
-        ppts[i].x,
-        ppts[i].y,
-        ppts[i + 1].x,
-        ppts[i + 1].y
-    );
-    context.stroke();
 }
 
 function brush() {
@@ -106,7 +83,6 @@ function brush() {
     var circleRadius = lineWidth/2;
     context.fillStyle = lineColor;
     context.arc(currX-circleRadius,currY-circleRadius,circleRadius,0,2*Math.PI);
-    
     context.fill();
     context.closePath();
 }
