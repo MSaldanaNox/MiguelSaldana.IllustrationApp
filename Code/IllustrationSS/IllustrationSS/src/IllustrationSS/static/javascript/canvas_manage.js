@@ -24,11 +24,8 @@
 	    currentIndex = 0;
 	    
 	    // Setting up canvas
-// canvas.width = 500;
-// canvas.height = 500;
 	    sketch = document.querySelector('#content');
 		var sketch_style = getComputedStyle(sketch);
-		console.log(sketch);
 	    context = canvas.getContext("2d");
 	    width = canvas.width;
 	    height = canvas.height;
@@ -67,6 +64,7 @@
 // }, false);
 	    
 	    // Adding toolbox event listeners
+	    currentTool = "pencil";
 	    toolBox.addEventListener("mousedown", function(e) {
 	    	changeTool(e)
 	    }, false);
@@ -115,17 +113,47 @@
 	
 	function changeTool(e) {
 		var target = e.target
-//		alert(target.id);
+		currentTool = target.id;
 	}
 	
 	function pencil() {
-	    context.beginPath();
-	    context.moveTo(prevX, prevY);
-	    context.lineTo(currX, currY);
-	    context.strokeStyle = lineColor;
-	    context.lineWidth = lineWidth;
-	    context.closePath();
-	    context.stroke();
+		tmp_ctx.lineWidth = 1;
+		// Saving all the points in an array
+		ppts.push({x: mouse.x, y: mouse.y});
+		
+		if (ppts.length < 3) {
+			var b = ppts[0];
+			tmp_ctx.beginPath();
+			// ctx.moveTo(b.x, b.y);
+			// ctx.lineTo(b.x+50, b.y+50);
+			tmp_ctx.arc(b.x, b.y, tmp_ctx.lineWidth / 2, 0, Math.PI * 2, !0);
+			tmp_ctx.fill();
+			tmp_ctx.closePath();
+			
+			return;
+		}
+		
+		// Tmp canvas is always cleared up before drawing.
+		tmp_ctx.clearRect(0, 0, tmp_canvas.width, tmp_canvas.height);
+		
+		tmp_ctx.beginPath();
+		tmp_ctx.moveTo(ppts[0].x, ppts[0].y);
+		
+		for (var i = 1; i < ppts.length - 2; i++) {
+			var c = (ppts[i].x + ppts[i + 1].x) / 2;
+			var d = (ppts[i].y + ppts[i + 1].y) / 2;
+			
+			tmp_ctx.quadraticCurveTo(ppts[i].x, ppts[i].y, c, d);
+		}
+		
+		// For the last 2 points
+		tmp_ctx.quadraticCurveTo(
+			ppts[i].x,
+			ppts[i].y,
+			ppts[i + 1].x,
+			ppts[i + 1].y
+		);
+		tmp_ctx.stroke();
 	}
 	
 	function brush() {
@@ -167,27 +195,33 @@
 		tmp_ctx.stroke();
 	}
 	
+	function paint() {
+		if(currentTool==="pencil")
+			pencil();
+		else if(currentTool==="brush")
+			brush();
+	}
 	
 	function findxy(res, e) {
 		/* Drawing on Paint App */
-		tmp_ctx.lineWidth = 30;
+		tmp_ctx.lineWidth = 10;
 		tmp_ctx.lineJoin = 'round';
 		tmp_ctx.lineCap = 'round';
 		tmp_ctx.strokeStyle = lineColor;
 		tmp_ctx.fillStyle = lineColor;
 		
 		if(res==='down') {
-				tmp_canvas.addEventListener('mousemove', brush, false);
+				tmp_canvas.addEventListener('mousemove', paint, false);
 				
 				mouse.x = typeof e.offsetX !== 'undefined' ? e.offsetX : e.layerX;
 				mouse.y = typeof e.offsetY !== 'undefined' ? e.offsetY : e.layerY;
 				
 				ppts.push({x: mouse.x, y: mouse.y});
 				
-				brush();
+				paint();
 		}
 		if(res==='up') {
-				tmp_canvas.removeEventListener('mousemove', brush, false);
+				tmp_canvas.removeEventListener('mousemove', paint, false);
 				
 				// Writing down to real canvas now
 				context.drawImage(tmp_canvas, 0, 0);
@@ -196,6 +230,7 @@
 				
 				// Emptying up Pencil Points
 				ppts = [];
+				saveInstance();
 		}
 	}
 	
@@ -286,14 +321,14 @@
 		var layerToAdd = new CanvasLayers.Layer(0,0,canvas.width,canvas.height);
 		container.getChildren().add(layerToAdd);
 		
-	// var num = Math.floor((Math.random()*999999));
-	// var hex = ''+num;
-	// while(hex.length<6)
-	// {
-	// hex = '0'+hex;
-	// }
-	// context.fillStyle = hex;
-	// context.fillRect(0, 0, layerToAdd.getWidth(), layerToAdd.getHeight());
+	 var num = Math.floor((Math.random()*999999));
+	 var hex = ''+num;
+	 while(hex.length<6)
+	 {
+	 hex = '0'+hex;
+	 }
+	 context.fillStyle = hex;
+	 context.fillRect(0, 0, layerToAdd.getWidth(), layerToAdd.getHeight());
 		activeLayer = layerToAdd;
 		currentIndex = container.getChildren().list.length-1;
 		console.log(container.getChildren().list[currentIndex]);

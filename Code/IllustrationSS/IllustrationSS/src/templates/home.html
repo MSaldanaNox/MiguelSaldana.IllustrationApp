@@ -1,64 +1,70 @@
 <html>
-    <head>
-    	{% load staticfiles %}
-        <link rel="stylesheet" type="text/css" href="{% static "styles/reset.css" %}"/>
-        <link rel="stylesheet" type="text/css" href="{% static "styles/home.css" %}"/>
-        <title>Illustration SS</title>
-    </head>
+<head>
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static "styles/reset.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "styles/home.css" %}"/>
+<title>Illustration SS</title>
+</head>
 
-    <body onload="init()">
-        <header>
-            <nav>
-                <ul>
-                    <li>File</li>
-                    <li>Edit</li>
-                    <li>View</li>
-                    <li>Image</li>
-                    <li>Layers</li>
-                    <li>Adjustments</li>
-                    <li>Effects</li>
-                    <li>Utilities</li>
-                </ul>
-            </nav>
-            <input type="button" value="Save Image" onclick="save()"/>
-            <input id="imageLoader" type="file" value="Load Image"/>
-            <div id="layerControls">
-		        <input type="button" value="Add Layer" onclick="addLayer()"/>
-		        <input type="button" value="Delete Layer" onclick="deleteLayer()"/>
-		        <input type="button" value="Move Layer Up" onclick="moveLayerUp()"/>
-		        <input type="button" value="Move Layer Down" onclick="moveLayerDown()"/>
-		        <input type="button" value="Undo" onclick="undo()"/>
-		        <input type="button" value="Redo" onclick="redo()"/>
-	        </div>
-        </header>
-        
-        <div id="container">
-            <div id="toolbox">
-                <div class="tool" id="pencil"></div>
-                <div class="tool" id="brush"></div>
-                <div class="tool" id="bucket"></div>
-                <div class="tool"></div>
-                <div class="tool"></div>
-                <div class="tool"></div>
-                <div class="tool"></div>
-                <div class="tool"></div>
-                <div class="tool"></div>
-                <div class="tool"></div>
-                <div id="colorTag">HexCode</div>
-                <input id="colorHex" type="text" placeholder="000000" maxlength="6" oninput="color(this)">
-                <div id="color"></div>
-            </div>
-            </div>
-            
-            <div id="content">
-                <canvas id="canvas"/>
-            </div>
-        </div>
-        
-        <script type="text/javascript" src="{% static "javascript/canvas_manage.js" %}"></script>
-        <script type="text/javascript" src="{% static "javascript/canvas2image.js" %}"></script>
-        <script type="text/javascript" src="{% static "javascript/canvaslayers.js" %}"></script>
-        <script type="text/javascript" src="{% static "javascript/base64.js" %}"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    </body>
+<body onload="init()">
+	<header>
+		<nav>
+			<ul>
+				<li>File</li>
+				<li>Edit</li>
+				<li>View</li>
+				<li>Image</li>
+				<li>Layers</li>
+				<li>Adjustments</li>
+				<li>Effects</li>
+				<li>Utilities</li>
+			</ul>
+		</nav>
+		<input type="button" value="Save Image" onclick="save()" /> <input
+			id="imageLoader" type="file" value="Load Image" />
+	</header>
+
+	<div id="container">
+		<div id="toolbox">
+			<div class="tool" id="pencil"></div>
+			<div class="tool" id="brush"></div>
+			<div class="tool" id="bucket"></div>
+			<div class="tool"></div>
+			<div class="tool"></div>
+			<div class="tool"></div>
+			<div class="tool"></div>
+			<div class="tool"></div>
+			<div class="tool"></div>
+			<div class="tool"></div>
+			<div id="colorTag">HexCode</div>
+			<input id="colorHex" type="text" placeholder="000000" maxlength="6"
+				oninput="color(this)">
+			<div id="color"></div>
+		</div>
+
+		<div id="content">
+			<canvas id="canvas" />
+		</div>
+
+		<div id="controls">
+			<div id="layers">
+				<input type="button" value="Add Layer" onclick="addLayer()" /> <input
+					type="button" value="Delete Layer" onclick="deleteLayer()" /> <input
+					type="button" value="Move Layer Up" onclick="moveLayerUp()" /> <input
+					type="button" value="Move Layer Down" onclick="moveLayerDown()" />
+			</div>
+			<div id="history">
+				<input type="button" value="Undo" onclick="undo()" /> <input
+					type="button" value="Redo" onclick="redo()" />
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="{% static "javascript/canvas_manage.js" %}"></script>
+	<script type="text/javascript" src="{% static "javascript/canvas2image.js" %}"></script>
+	<script type="text/javascript" src="{% static "javascript/canvaslayers.js" %}"></script>
+	<script type="text/javascript" src="{% static "javascript/base64.js" %}"></script>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+</body>
 </html>
