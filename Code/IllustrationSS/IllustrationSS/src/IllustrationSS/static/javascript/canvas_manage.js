@@ -195,11 +195,34 @@
 		tmp_ctx.stroke();
 	}
 	
+	function picker() {
+	    var pixel = context.getImageData(ppts[ppts.length-1].x, ppts[ppts.length-1].y, 1, 1).data; 
+	    var hex = "#" + ("000000" + rgbToHex(pixel[0], pixel[1], pixel[2])).slice(-6);
+	    
+	    console.log(ppts[ppts.length-1].x);
+	    
+	    lineColor = hex;
+	    var colorDiv = document.getElementById('color');
+	    colorDiv.style.backgroundColor = hex;
+	    
+	    console.log(hex);
+	    
+	    currentTool = "brush";
+	}
+	
+	function rgbToHex(r, g, b) {
+	    if (r > 255 || g > 255 || b > 255)
+	        throw "Invalid color component";
+	    return ((r << 16) | (g << 8) | b).toString(16);
+	}
+	
 	function paint() {
 		if(currentTool==="pencil")
 			pencil();
 		else if(currentTool==="brush")
 			brush();
+		else if(currentTool==="picker")
+			picker();
 	}
 	
 	function findxy(res, e) {
@@ -318,6 +341,7 @@
 	}
 	
 	function addLayer()	{
+		console.log(container.getChildren());
 		var layerToAdd = new CanvasLayers.Layer(0,0,canvas.width,canvas.height);
 		container.getChildren().add(layerToAdd);
 		

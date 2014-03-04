@@ -103,6 +103,12 @@ nav li:hover {
     background-repeat: no-repeat;
 }
 
+#picker {
+	background-image: url(/static/images/ColorPicker.png);
+    background-position:center;
+    background-repeat: no-repeat;
+}
+
 #colorTag{
     padding-top: 10px;
     width: 100px;
