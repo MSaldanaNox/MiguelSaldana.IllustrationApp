@@ -45,7 +45,7 @@ nav li:hover {
     height:500px;
     margin-left: auto;
     margin-right: auto;
-    background-color: white;
+    background-image: url(/static/images/Background.png);
     top:100px;
 }
 
