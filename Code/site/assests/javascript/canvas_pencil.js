@@ -46,7 +46,7 @@ function draw() {
     context.beginPath();
     context.moveTo(prevX, prevY);
     context.lineTo(currX, currY);
-    context.strokeStyle = lineColor;
+    context.strokeStyle = rgba(0,0,0,1);
     context.lineWidth = lineWidth;
     context.stroke();
     context.closePath();

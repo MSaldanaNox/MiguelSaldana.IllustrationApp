@@ -6,7 +6,7 @@
 	    currY = 0,
 	    dot_flag = false;
 	
-	var lineColor = "black",
+	var lineColor = 'rgba(222,0,0,.5)',
 	    lineWidth = 1;
 	
 	function init() {
@@ -65,9 +65,24 @@
 	    
 	    // Adding toolbox event listeners
 	    currentTool = "pencil";
-	    toolBox.addEventListener("mousedown", function(e) {
-	    	changeTool(e)
-	    }, false);
+//	    toolBox.addEventListener("mousedown", function(e) {
+//	    	changeTool(e)
+//	    }, false);
+	    
+	    // for each iterates over a list and runs a function for each element
+	    var forEach = Array.prototype.forEach,
+	        // query selector all runs a CSS selector and returns a list of elements
+	        // matching the selector
+	        $$ = document.querySelectorAll.bind(document);
+
+	    // for each element in the list returned by the CSS selector    
+	    forEach.call($$('.tool'), function(v) {
+	      // add an event listener to the click event
+	      v.addEventListener("mousedown", function(e) {
+		    	changeTool(e)
+		    }, false);
+	    });
+	    
 	    container.redraw();
 	    
 	    // Setting up drawing functionality
@@ -198,22 +213,65 @@
 	function picker() {
 	    var pixel = context.getImageData(ppts[ppts.length-1].x, ppts[ppts.length-1].y, 1, 1).data; 
 	    var hex = "#" + ("000000" + rgbToHex(pixel[0], pixel[1], pixel[2])).slice(-6);
-	    
+
 	    console.log(ppts[ppts.length-1].x);
-	    
+
 	    lineColor = hex;
 	    var colorDiv = document.getElementById('color');
 	    colorDiv.style.backgroundColor = hex;
-	    
+
 	    console.log(hex);
-	    
+
 	    currentTool = "brush";
 	}
-	
+
 	function rgbToHex(r, g, b) {
 	    if (r > 255 || g > 255 || b > 255)
 	        throw "Invalid color component";
 	    return ((r << 16) | (g << 8) | b).toString(16);
+	}
+	
+	function eraser() {
+		// Setting clear color
+		tmp_ctx.strokeStyle = 'rgba(0,0,0,1)';
+		tmp_ctx.fillStyle = 'rgba(0,0,0,0)';
+		
+		// Saving all the points in an array
+		ppts.push({x: mouse.x, y: mouse.y});
+		
+		if (ppts.length < 3) {
+			var b = ppts[0];
+			tmp_ctx.beginPath();
+			// ctx.moveTo(b.x, b.y);
+			// ctx.lineTo(b.x+50, b.y+50);
+			tmp_ctx.arc(b.x, b.y, tmp_ctx.lineWidth / 2, 0, Math.PI * 2, !0);
+			tmp_ctx.fill();
+			tmp_ctx.closePath();
+			
+			return;
+		}
+		
+		// Tmp canvas is always cleared up before drawing.
+		tmp_ctx.clearRect(0, 0, tmp_canvas.width, tmp_canvas.height);
+		
+		tmp_ctx.beginPath();
+		tmp_ctx.moveTo(ppts[0].x, ppts[0].y);
+		
+		for (var i = 1; i < ppts.length - 2; i++) {
+			var c = (ppts[i].x + ppts[i + 1].x) / 2;
+			var d = (ppts[i].y + ppts[i + 1].y) / 2;
+			
+			tmp_ctx.quadraticCurveTo(ppts[i].x, ppts[i].y, c, d);
+		}
+		
+		// For the last 2 points
+		tmp_ctx.quadraticCurveTo(
+			ppts[i].x,
+			ppts[i].y,
+			ppts[i + 1].x,
+			ppts[i + 1].y
+		);
+		tmp_ctx.stroke();
 	}
 	
 	function paint() {
@@ -223,6 +281,8 @@
 			brush();
 		else if(currentTool==="picker")
 			picker();
+		else if(currentTool==="eraser")
+			eraser();
 	}
 	
 	function findxy(res, e) {
