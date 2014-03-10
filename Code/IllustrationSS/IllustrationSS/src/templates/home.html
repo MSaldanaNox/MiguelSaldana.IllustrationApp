@@ -36,9 +36,26 @@
 			<div class="tool"></div>
 			<div class="tool"></div>
 			<div class="tool"></div>
-			<div id="colorTag">HexCode</div>
-			<input id="colorHex" type="text" placeholder="000000" maxlength="6"
-				oninput="color(this)">
+			
+			<div class="colorTag">Red</div>
+			<input id="red" class="rgb" type="number" placeholder="255" min="0" max="255" oninput="rgbValues(this)">
+			<div class="colorTag">Blue</div>
+			<input id="blue" class="rgb" type="number" placeholder="255" min="0" max="255" oninput="rgbValues(this)">
+			<div class="colorTag">Green</div>
+			<input id="green" class="rgb" type="number" placeholder="255" min="0" max="255" oninput="rgbValues(this)">
+			
+			<div class="colorTag">Hue</div>
+			<input id="hue" class="hsv" type="number" placeholder="360" min="0" max="360" oninput="hsvValues(this)">
+			<div class="colorTag">Saturation</div>
+			<input id="saturation" class="hsv" type="number" placeholder="100" min="0" max="100" oninput="hsvValues(this)">
+			<div class="colorTag">Brightness</div>
+			<input id="brightness" class="hsv" type="number" placeholder="100" min="0" max="100" oninput="hsvValues(this)">
+			
+			<div class="colorTag">Transparency</div>
+			<input id="alpha" type="number" placeholder="100" min="0" max="100" oninput="transparency(this)">
+			
+			<div class="colorTag">HexCode</div>
+			<input id="colorHex" type="text" placeholder="000000" maxlength="6")>
 			<div id="color"></div>
 		</div>
 
