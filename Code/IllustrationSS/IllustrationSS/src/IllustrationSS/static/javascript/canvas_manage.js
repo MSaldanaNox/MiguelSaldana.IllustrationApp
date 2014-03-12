@@ -146,7 +146,6 @@ function init() {
 }
 
 function hexcode(obj) {
-	console.log(obj.value)
 	var toHex = obj.value;
 	var colorDiv = document.getElementById('color');
 	while (toHex.length < 6) {
@@ -205,7 +204,6 @@ function hsvValues(obj) {
 
 function transparency(obj) {
 	trans = (obj.value / 100);
-	console.log(lineColor);
 }
 
 function changeTool(e) {
@@ -298,13 +296,10 @@ function picker() {
 	var hex = "#"
 			+ ("000000" + rgbToHex(pixel[0], pixel[1], pixel[2])).slice(-6);
 
-	console.log(ppts[ppts.length - 1].x);
 
 	lineColor = hex;
 	var colorDiv = document.getElementById('color');
 	colorDiv.style.backgroundColor = hex;
-
-	console.log(hex);
 
 	currentTool = "brush";
 }

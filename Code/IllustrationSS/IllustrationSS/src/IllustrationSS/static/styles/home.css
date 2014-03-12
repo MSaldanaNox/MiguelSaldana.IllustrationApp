@@ -69,6 +69,10 @@ nav li:hover {
     display: inline-block;
 }
 
+#toolbox input {
+	margin-left: 10px;
+}
+
 .tool {
     height: 60px;
     width: 60px;
@@ -116,15 +120,17 @@ nav li:hover {
     padding-top: 10px;
     width: 100px;
     color: white;
+    margin-left: 10px;
 }
 
 #colorHex  {
-    width: 100px;
+    width: 68px;
 }
 
 #color {
-    width: 100px;
+    width: 68px;
     height: 20px;
+    margin-left: 10px;
     background-color: black;
 }
 
