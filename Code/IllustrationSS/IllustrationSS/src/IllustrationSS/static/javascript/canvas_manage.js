@@ -69,25 +69,6 @@ function init() {
 	document.getElementById('colorHex').value = '000000';
 	hex = '000000';
 
-	// Adding on change event listeners
-	// // RGB values
-	// var red = document.getElementById('red');
-	// red.addEventListener('change', rgbValues, false);
-	// var blue = document.getElementById('blue');
-	// red.addEventListener('change', rgbValues, false);
-	// var green = document.getElementById('green');
-	// red.addEventListener('', rgbValues, false);
-	// // HSV values
-	// var hue = document.getElementById('hue');
-	// hue.addEventListener('change', hsvValues, false);
-	// var saturation = document.getElementById('saturation');
-	// saturation.addEventListener('change', hsvValues, false);
-	// var brightness = document.getElementById('brightness');
-	// brightness.addEventListener('change', hsvValues, false);
-	// // Alpha Value
-	// var alpha = document.getElementById('alpha');
-	// alpha.addEventListener('change', transparency, false);
-
 	// Setting initial line color
 	linecolor = 'rgba(0,0,0,1)';
 
@@ -168,11 +149,11 @@ function rgbValues(obj) {
 	else if (colorName == 'blue')
 		blue = colorValue;
 
-	if(red==null || red.isNaN())
+	if(red==null || isNaN(red))
 		red = 0;
-	if(green==null || green.isNaN())
+	if(green==null || isNaN(green))
 		green = 0;
-	if(blue==null || blue.isNaN())
+	if(blue==null || isNaN(blue))
 		blue = 0;
 	
 	var color = 'rgba(' + red + ',' + green + ',' + blue + ',' + trans + ')';
@@ -192,6 +173,13 @@ function hsvValues(obj) {
 		sat = colorValue;
 	else if (colorName == 'brightness')
 		val = colorValue;
+	
+	if(hue==null || isNaN(hue))
+		hue = 0;
+	if(sat==null || isNaN(sat))
+		sat = 0;
+	if(val==null || isNaN(val))
+		val = 0;
 	
 	hsvToRgb(hue,sat,val);
 	var color = 'rgba(' + red + ',' + green + ',' + blue + ',' + trans + ')';
@@ -313,15 +301,6 @@ function rgbToHsv(r, g, b) {
 	var g = parseInt(g, 10);
 	var b = parseInt(b, 10);
 
-	if (r == null || g == null || b == null || isNaN(r) || isNaN(g) || isNaN(b)) {
-		alert('Please enter numeric RGB values!');
-		return;
-	}
-	
-	if (r < 0 || g < 0 || b < 0 || r > 255 || g > 255 || b > 255) {
-		alert('RGB values must be in the range 0 to 255.');
-		return;
-	}
 	r = r / 255;
 	g = g / 255;
 	b = b / 255;
@@ -353,7 +332,12 @@ function rgbToHsv(r, g, b) {
 function rgbToHex(r, g, b) {
 	if (r > 255 || g > 255 || b > 255)
 		throw "Invalid color component";
-	return ((r << 16) | (g << 8) | b).toString(16);
+	var hex = ((r << 16) | (g << 8) | b).toString(16);
+	while (hex.length < 6) {
+		hex = "0" + hex;
+	}
+	
+	return hex;
 }
 
 function hsvToRgb(h, s, v) {
@@ -453,7 +437,7 @@ function paint() {
 
 function findxy(res, e) {
 	/* Drawing on Paint App */
-	tmp_ctx.lineWidth = 10;
+	tmp_ctx.lineWidth = 20;
 	tmp_ctx.lineJoin = 'round';
 	tmp_ctx.lineCap = 'round';
 	tmp_ctx.strokeStyle = lineColor;
