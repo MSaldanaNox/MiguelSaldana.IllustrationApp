@@ -87,9 +87,6 @@ function init() {
 	// // Alpha Value
 	// var alpha = document.getElementById('alpha');
 	// alpha.addEventListener('change', transparency, false);
-	// HexCode value
-	var hex = document.getElementById('colorHex');
-	hex.addEventListener('change', hexcode, false);
 
 	// Setting initial line color
 	linecolor = 'rgba(0,0,0,1)';
@@ -149,8 +146,8 @@ function init() {
 }
 
 function hexcode(obj) {
-	console.log(obj.target.value)
-	var toHex = obj.target.value;
+	console.log(obj.value)
+	var toHex = obj.value;
 	var colorDiv = document.getElementById('color');
 	while (toHex.length < 6) {
 		toHex += "0";
@@ -159,40 +156,51 @@ function hexcode(obj) {
 	lineColor = "#" + toHex;
 	var colorDiv = document.getElementById('color');
 	colorDiv.style.backgroundColor = "#" + toHex;
+	HexToRGB();
 }
 
 function rgbValues(obj) {
 	var colorName = obj.id;
 	var colorValue = obj.value;
 	if (colorName == 'red')
-		red = colorValue;
+		red = colorValue;	
+	else if (colorName == 'green')
+			green = colorValue;
 	else if (colorName == 'blue')
 		blue = colorValue;
-	else if (colorName == 'green')
-		green = colorValue;
 
-	var color = 'rgba(' + red + ',' + blue + ',' + green + ',' + trans + ')';
+	if(red==null || red.isNaN())
+		red = 0;
+	if(green==null || green.isNaN())
+		green = 0;
+	if(blue==null || blue.isNaN())
+		blue = 0;
+	
+	var color = 'rgba(' + red + ',' + green + ',' + blue + ',' + trans + ')';
 	lineColor = color;
 	var colorDiv = document.getElementById('color');
 	colorDiv.style.backgroundColor = color;
-	document.getElementById('colorHex').value = rgbToHex(red, blue, green);
-	rgbToHsv(red,blue,green);
+	document.getElementById('colorHex').value = rgbToHex(red, green, blue);
+	rgbToHsv(red,green,blue);
 }
 
 function hsvValues(obj) {
-	var colorName = obj.target.id;
-	var colorValue = obj.target.value;
+	var colorName = obj.id;
+	var colorValue = obj.value;
 	if (colorName == 'hue')
 		hue = colorValue;
 	else if (colorName == 'saturation')
 		sat = colorValue;
 	else if (colorName == 'brightness')
 		val = colorValue;
-
-	var color = 'hsla(' + hue + ',' + sat + ',' + val + ',' + trans + ')';
+	
+	hsvToRgb(hue,sat,val);
+	var color = 'rgba(' + red + ',' + green + ',' + blue + ',' + trans + ')';
 	lineColor = color;
 	var colorDiv = document.getElementById('color');
 	colorDiv.style.backgroundColor = color;
+	document.getElementById('colorHex').value = rgbToHex(red, green, blue);
+	
 }
 
 function transparency(obj) {
@@ -306,7 +314,6 @@ function rgbToHsv(r, g, b) {
 	var computedS = 0;
 	var computedV = 0;
 
-	// remove spaces from input RGB values, convert to int
 	var r = parseInt(r, 10);
 	var g = parseInt(g, 10);
 	var b = parseInt(b, 10);
@@ -340,8 +347,8 @@ function rgbToHsv(r, g, b) {
 	computedV = maxRGB;
 	
 	hue = computedH;
-	sat = computedS;
-	val = computedV;
+	sat = computedS*100;
+	val = computedV*100;
 	
 	document.getElementById('hue').value = hue;
 	document.getElementById('saturation').value = sat;
@@ -354,13 +361,44 @@ function rgbToHex(r, g, b) {
 	return ((r << 16) | (g << 8) | b).toString(16);
 }
 
+function hsvToRgb(h, s, v) {
+	h=h/360;
+	s=s/100;
+	v=v/100;
+    var r, g, b, i, f, p, q, t;
+    if (h && s === undefined && v === undefined) {
+        s = h.s, v = h.v, h = h.h;
+    }
+    i = Math.floor(h * 6);
+    f = h * 6 - i;
+    p = v * (1 - s);
+    q = v * (1 - f * s);
+    t = v * (1 - (1 - f) * s);
+    switch (i % 6) {
+        case 0: r = v, g = t, b = p; break;
+        case 1: r = q, g = v, b = p; break;
+        case 2: r = p, g = v, b = t; break;
+        case 3: r = p, g = q, b = v; break;
+        case 4: r = t, g = p, b = v; break;
+        case 5: r = v, g = p, b = q; break;
+    }
+    red = Math.floor(r*255);
+	green = Math.floor(g * 255);
+	blue = Math.floor(b * 255);
+	document.getElementById('red').value = red;
+	document.getElementById('green').value = green;
+	document.getElementById('blue').value = blue;
+	document.getElementById('colorHex').value = rgbToHex(red, green, blue);
+}
+
 function HexToRGB() {
 	red = parseInt(hex.substring(0, 2), 16);
-	blue = parseInt(hex.substring(2, 4), 16);
-	green = parseInt(hex.substring(4, 6), 16);
+	green = parseInt(hex.substring(2, 4), 16);
+	blue = parseInt(hex.substring(4, 6), 16);
 	document.getElementById('red').value = red;
-	document.getElementById('green').value = blue;
-	document.getElementById('blue').value = green;
+	document.getElementById('green').value = green;
+	document.getElementById('blue').value = blue;
+	rgbToHsv(red,green,blue);
 }
 
 function eraser() {
