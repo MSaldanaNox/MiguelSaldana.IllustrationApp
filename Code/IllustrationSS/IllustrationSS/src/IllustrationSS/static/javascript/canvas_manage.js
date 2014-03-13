@@ -1,9 +1,10 @@
-var canvas, context, container, activeLayer, currentIndex, history, redoStack, toolBox, currentTool, ppts, tmp_canvas, tmp_ctx, mouse, last_mouse, sketch, prevX = 0, currX = 0, prevY = 0, currY = 0, dot_flag = false;
-
+var canvas, context, container, activeLayer, currentIndex, history, redoStack, toolBox, currentTool, ppts, tmp_canvas, tmp_ctx, mouse, last_mouse, sketch, 
+prevX = 0, currX = 0, prevY = 0, currY = 0, dot_flag = false;
 var red, blue, green;
 var hue, sat, val;
 var trans;
 var hex;
+var activeContext;
 
 var lineColor, lineWidth = 1;
 
@@ -19,29 +20,16 @@ function init() {
 
 	// Setting the currently active layer of app
 	activeLayer = canvas;
+	activeContext = activeLayer.getContext('2d');
 	currentIndex = 0;
 
 	// Setting up canvas
 	sketch = document.querySelector('#content');
+	
 	var sketch_style = getComputedStyle(sketch);
 	context = canvas.getContext("2d");
 	width = canvas.width;
 	height = canvas.height;
-
-	// Setting up Layering functionality
-	container = new CanvasLayers.Container(canvas, false);
-	container.onRender = function(layer, rect, con) {
-		con.fillStyle = '#FFF';
-		con.fillRect(0, 0, layer.getWidth(), layer.getHeight());
-	}
-
-	activeLayer = new CanvasLayers.Layer(0, 0, width, height);
-	container.getChildren().add(activeLayer);
-
-	activeLayer.onRender = function(layer, rect, con) {
-		con.fillStyle = '#454545';
-		con.fillRect(0, 0, layer.getWidth(), layer.getHeight());
-	}
 
 	// Loading in Image
 	var imageLoader = document.getElementById('imageLoader');
@@ -88,8 +76,6 @@ function init() {
 			changeTool(e)
 		}, false);
 	});
-
-	container.redraw();
 
 	// Setting up drawing functionality
 	canvas.width = parseInt(sketch_style.getPropertyValue('width'));
@@ -272,8 +258,7 @@ function brush() {
 	}
 
 	// For the last 2 points
-	tmp_ctx
-			.quadraticCurveTo(ppts[i].x, ppts[i].y, ppts[i + 1].x,
+	tmp_ctx.quadraticCurveTo(ppts[i].x, ppts[i].y, ppts[i + 1].x,
 					ppts[i + 1].y);
 	tmp_ctx.stroke();
 }
@@ -442,7 +427,7 @@ function findxy(res, e) {
 	tmp_ctx.lineCap = 'round';
 	tmp_ctx.strokeStyle = lineColor;
 	tmp_ctx.fillStyle = lineColor;
-
+	
 	if (res === 'down') {
 		tmp_canvas.addEventListener('mousemove', paint, false);
 
@@ -458,9 +443,9 @@ function findxy(res, e) {
 	}
 	if (res === 'up') {
 		tmp_canvas.removeEventListener('mousemove', paint, false);
-
+		console.log(activeContext);
 		// Writing down to real canvas now
-		context.drawImage(tmp_canvas, 0, 0);
+		activeContext.drawImage(tmp_canvas, 0, 0);
 		// Clearing tmp canvas
 		tmp_ctx.clearRect(0, 0, tmp_canvas.width, tmp_canvas.height);
 
@@ -549,37 +534,33 @@ function redo() {
 }
 
 function addLayer() {
-	console.log(container.getChildren());
-	var layerToAdd = new CanvasLayers.Layer(0, 0, canvas.width, canvas.height);
-	container.getChildren().add(layerToAdd);
-
-	var num = Math.floor((Math.random() * 999999));
-	var hex = '' + num;
-	while (hex.length < 6) {
-		hex = '0' + hex;
-	}
-	context.fillStyle = hex;
-	context.fillRect(0, 0, layerToAdd.getWidth(), layerToAdd.getHeight());
-	activeLayer = layerToAdd;
-	currentIndex = container.getChildren().list.length - 1;
-	console.log(container.getChildren().list[currentIndex]);
-	saveInstance();
+	var newLayer = document.createElement('canvas');
+	newLayer.id = 'Layer' + (sketch.childNodes.length-2);
+	newLayer.width = canvas.width;
+	newLayer.height = canvas.height;
+	
+	sketch.insertBefore(newLayer, activeLayer.nextSibling);
+	activeLayer = newLayer;
+	activeContext = activeLayer.getContext('2d');
+	console.log(activeLayer);
 }
 
 function deleteLayer() {
-	var layerCollection = container.getChildren();
-	var layerArray = layerCollection.list;
-
-	if (layerArray.length > 0) {
-		console.log(layerCollection);
-		console.log(layerArray);
-		console.log(currentIndex)
-		if (currentIndex != 0)
-			currentIndex = currentIndex - 1;
-		layerArray[currentIndex].close();
-		saveInstance();
-	}
-	container.redraw();
+	console.log(sketch.childNodes);
+	sketch.removeChild(sketch.lastChild);
+	console.log(sketch.childNodes);
+//	var layerCollection = container.getChildren();
+//	var layerArray = layerCollection.list;
+//
+//	if (layerArray.length > 0) {
+//		console.log(layerCollection);
+//		console.log(layerArray);
+//		console.log(currentIndex)
+//		if (currentIndex != 0)
+//			currentIndex = currentIndex - 1;
+//		layerArray[currentIndex].close();
+//		saveInstance();
+//	}
 }
 
 function moveLayerUp() {
@@ -594,7 +575,6 @@ function moveLayerUp() {
 		layerArray[currentIndex + 1] = temp;
 		layerArray[currentIndex + 1].show();
 		layerArray[currentIndex].show();
-		container.redraw();
 		saveInstance();
 	}
 }
@@ -611,7 +591,6 @@ function moveLayerDown() {
 		layerArray[currentIndex - 1] = temp;
 		layerArray[currentIndex - 1].show();
 		layerArray[currentIndex].show();
-		container.redraw();
 		saveInstance();
 	}
 }
