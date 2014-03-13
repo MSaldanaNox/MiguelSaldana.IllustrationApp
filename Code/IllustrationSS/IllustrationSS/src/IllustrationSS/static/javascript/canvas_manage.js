@@ -11,6 +11,7 @@ var lineColor, lineWidth = 1;
 function init() {
 	// Set up basic tools
 	canvas = document.getElementById("canvas");
+	
 	toolBox = document.getElementById("toolbox");
 
 	// Set up history functionality
@@ -81,13 +82,13 @@ function init() {
 	canvas.width = parseInt(sketch_style.getPropertyValue('width'));
 	canvas.height = parseInt(sketch_style.getPropertyValue('height'));
 
-	tmp_canvas = document.createElement('canvas');
-	tmp_ctx = tmp_canvas.getContext('2d');
-	tmp_canvas.id = 'tmp_canvas';
-	tmp_canvas.width = canvas.width;
-	tmp_canvas.height = canvas.height;
-
-	sketch.appendChild(tmp_canvas);
+//	tmp_canvas = document.createElement('canvas');
+//	tmp_ctx = tmp_canvas.getContext('2d');
+//	tmp_canvas.id = 'tmp_canvas';
+//	tmp_canvas.width = canvas.width;
+//	tmp_canvas.height = canvas.height;
+//
+//	sketch.appendChild(tmp_canvas);
 
 	mouse = {
 		x : 0,
@@ -99,17 +100,18 @@ function init() {
 	};
 	ppts = [];
 
-	tmp_canvas.addEventListener('mousemove', function(e) {
+	activeLayer.addEventListener('mousemove', function(e) {
 		mouse.x = typeof e.offsetX !== 'undefined' ? e.offsetX : e.layerX;
 		mouse.y = typeof e.offsetY !== 'undefined' ? e.offsetY : e.layerY;
 	}, false);
 
-	tmp_canvas.addEventListener('mousedown', function(e) {
+	activeLayer.addEventListener('mousedown', function(e) {
 		findxy('down', e)
 	}, false);
-	tmp_canvas.addEventListener('mouseup', function(e) {
+	activeLayer.addEventListener('mouseup', function(e) {
 		findxy('up', e)
 	}, false);
+	saveInstance();
 }
 
 function hexcode(obj) {
@@ -186,7 +188,7 @@ function changeTool(e) {
 }
 
 function pencil() {
-	tmp_ctx.lineWidth = 1;
+	activeContext.lineWidth = 1;
 	// Saving all the points in an array
 	ppts.push({
 		x : mouse.x,
@@ -195,34 +197,32 @@ function pencil() {
 
 	if (ppts.length < 3) {
 		var b = ppts[0];
-		tmp_ctx.beginPath();
+		activeContext.beginPath();
 		// ctx.moveTo(b.x, b.y);
 		// ctx.lineTo(b.x+50, b.y+50);
-		tmp_ctx.arc(b.x, b.y, tmp_ctx.lineWidth / 2, 0, Math.PI * 2, !0);
-		tmp_ctx.fill();
-		tmp_ctx.closePath();
+		activeContext.arc(b.x, b.y, activeContext.lineWidth / 2, 0, Math.PI * 2, !0);
+		activeContext.fill();
+		activeContext.closePath();
 
 		return;
 	}
 
-	// Tmp canvas is always cleared up before drawing.
-	tmp_ctx.clearRect(0, 0, tmp_canvas.width, tmp_canvas.height);
 
-	tmp_ctx.beginPath();
-	tmp_ctx.moveTo(ppts[0].x, ppts[0].y);
+	activeContext.beginPath();
+	activeContext.moveTo(ppts[0].x, ppts[0].y);
 
 	for ( var i = 1; i < ppts.length - 2; i++) {
 		var c = (ppts[i].x + ppts[i + 1].x) / 2;
 		var d = (ppts[i].y + ppts[i + 1].y) / 2;
 
-		tmp_ctx.quadraticCurveTo(ppts[i].x, ppts[i].y, c, d);
+		activeContext.quadraticCurveTo(ppts[i].x, ppts[i].y, c, d);
 	}
 
 	// For the last 2 points
-	tmp_ctx
+	activeContext
 			.quadraticCurveTo(ppts[i].x, ppts[i].y, ppts[i + 1].x,
 					ppts[i + 1].y);
-	tmp_ctx.stroke();
+	activeContext.stroke();
 }
 
 function brush() {
@@ -234,33 +234,30 @@ function brush() {
 
 	if (ppts.length < 3) {
 		var b = ppts[0];
-		tmp_ctx.beginPath();
+		activeContext.beginPath();
 		// ctx.moveTo(b.x, b.y);
 		// ctx.lineTo(b.x+50, b.y+50);
-		tmp_ctx.arc(b.x, b.y, tmp_ctx.lineWidth / 2, 0, Math.PI * 2, !0);
-		tmp_ctx.fill();
-		tmp_ctx.closePath();
+		activeContext.arc(b.x, b.y, activeContext.lineWidth / 2, 0, Math.PI * 2, !0);
+		activeContext.fill();
+		activeContext.closePath();
 
 		return;
 	}
 
-	// Tmp canvas is always cleared up before drawing.
-	tmp_ctx.clearRect(0, 0, tmp_canvas.width, tmp_canvas.height);
-
-	tmp_ctx.beginPath();
-	tmp_ctx.moveTo(ppts[0].x, ppts[0].y);
+	activeContext.beginPath();
+	activeContext.moveTo(ppts[0].x, ppts[0].y);
 
 	for ( var i = 1; i < ppts.length - 2; i++) {
 		var c = (ppts[i].x + ppts[i + 1].x) / 2;
 		var d = (ppts[i].y + ppts[i + 1].y) / 2;
 
-		tmp_ctx.quadraticCurveTo(ppts[i].x, ppts[i].y, c, d);
+		activeContext.quadraticCurveTo(ppts[i].x, ppts[i].y, c, d);
 	}
 
 	// For the last 2 points
-	tmp_ctx.quadraticCurveTo(ppts[i].x, ppts[i].y, ppts[i + 1].x,
+	activeContext.quadraticCurveTo(ppts[i].x, ppts[i].y, ppts[i + 1].x,
 					ppts[i + 1].y);
-	tmp_ctx.stroke();
+	activeContext.stroke();
 }
 
 function picker() {
@@ -422,14 +419,14 @@ function paint() {
 
 function findxy(res, e) {
 	/* Drawing on Paint App */
-	tmp_ctx.lineWidth = 20;
-	tmp_ctx.lineJoin = 'round';
-	tmp_ctx.lineCap = 'round';
-	tmp_ctx.strokeStyle = lineColor;
-	tmp_ctx.fillStyle = lineColor;
+	activeContext.lineWidth = 20;
+	activeContext.lineJoin = 'round';
+	activeContext.lineCap = 'round';
+	activeContext.strokeStyle = lineColor;
+	activeContext.fillStyle = lineColor;
 	
 	if (res === 'down') {
-		tmp_canvas.addEventListener('mousemove', paint, false);
+		activeLayer.addEventListener('mousemove', paint, false);
 
 		mouse.x = typeof e.offsetX !== 'undefined' ? e.offsetX : e.layerX;
 		mouse.y = typeof e.offsetY !== 'undefined' ? e.offsetY : e.layerY;
@@ -442,12 +439,7 @@ function findxy(res, e) {
 		paint();
 	}
 	if (res === 'up') {
-		tmp_canvas.removeEventListener('mousemove', paint, false);
-		console.log(activeContext);
-		// Writing down to real canvas now
-		activeContext.drawImage(tmp_canvas, 0, 0);
-		// Clearing tmp canvas
-		tmp_ctx.clearRect(0, 0, tmp_canvas.width, tmp_canvas.height);
+		activeLayer.removeEventListener('mousemove', paint, false);
 
 		// Emptying up Pencil Points
 		ppts = [];
@@ -505,7 +497,16 @@ function getCookie(name) {
 }
 
 function saveInstance() {
-	history.push(document.getElementById('canvas').toDataURL());
+	
+	var actions = new Array();
+	var i = 1;
+	while(i < sketch.childNodes.length)
+	{
+		actions.push(sketch.childNodes[i]);
+		i++;
+	}
+	
+	history.push(actions);
 	if (redoStack.length > 0) {
 		redoStack.splice(0, redoStack.length);
 	}
@@ -514,10 +515,20 @@ function saveInstance() {
 function undo() {
 	if (history.length > 1) {
 		var toRedo = history.pop();
-		var img = new Image();
-		img.src = history[history.length - 1];
-		canvas.width = canvas.width;
-		context.drawImage(img, 0, 0);
+		var revert = history[history.length-1];
+		while(sketch.childNodes.length>1)
+		{
+			sketch.removeChild(sketch.childNodes[1]);
+		}
+		console.log(revert);
+		console.log(revert[0]);
+		var i=0;
+		while(i<revert.length)
+		{
+			sketch.appendChild(revert[i]);
+			i++;
+		}
+		console.log(sketch.childNodes);
 		redoStack.push(toRedo);
 	}
 }
@@ -525,72 +536,130 @@ function undo() {
 function redo() {
 	if (redoStack.length > 0) {
 		var toHistory = redoStack.pop();
-		var img = new Image();
-		img.src = toHistory;
-		canvas.width = canvas.width;
-		context.drawImage(img, 0, 0);
+		while(sketch.childNodes.length>1)
+		{
+			sketch.removeChild(sketch.childNodes[1]);
+		}
+		
+		var i=0;
+		console.log(toHistory);
+		console.log(toHistory[0]);
+		while(1<toHistory.length)
+		{
+			sketch.appendChild(toHistory[i]);
+			i++;
+		}
 		history.push(toHistory);
 	}
 }
 
 function addLayer() {
 	var newLayer = document.createElement('canvas');
-	newLayer.id = 'Layer' + (sketch.childNodes.length-2);
+	newLayer.id = 'Layer' + (sketch.childNodes.length-1);
 	newLayer.width = canvas.width;
 	newLayer.height = canvas.height;
+	newLayer.style.position = 'absolute';
+	newLayer.style.left = '0';
+	newLayer.style.right = '0';
+	newLayer.style.top = '0';
+	newLayer.style.bottom = '0';
+	
+	console.log(activeLayer.nextSibling);
 	
 	sketch.insertBefore(newLayer, activeLayer.nextSibling);
+	
+	removeActiveListeners();
+	
 	activeLayer = newLayer;
 	activeContext = activeLayer.getContext('2d');
-	console.log(activeLayer);
+	
+	addActiveListeners();
+	adjustZIndex();
+	
+	saveInstance();
 }
 
 function deleteLayer() {
-	console.log(sketch.childNodes);
-	sketch.removeChild(sketch.lastChild);
-	console.log(sketch.childNodes);
-//	var layerCollection = container.getChildren();
-//	var layerArray = layerCollection.list;
-//
-//	if (layerArray.length > 0) {
-//		console.log(layerCollection);
-//		console.log(layerArray);
-//		console.log(currentIndex)
-//		if (currentIndex != 0)
-//			currentIndex = currentIndex - 1;
-//		layerArray[currentIndex].close();
-//		saveInstance();
-//	}
-}
-
-function moveLayerUp() {
-	var layerCollection = container.getChildren();
-	var layerArray = layerCollection.list;
-
-	if (currentIndex != layerArray.length - 1) {
-		var temp = layerArray[currentIndex];
-		temp.hide();
-		layerArray[currentIndex] = layerArray[currentIndex + 1];
-		layerArray[currentIndex].hide();
-		layerArray[currentIndex + 1] = temp;
-		layerArray[currentIndex + 1].show();
-		layerArray[currentIndex].show();
+	if(sketch.childNodes.length > 2)
+	{
+		var successor;
+		removeActiveListeners();
+		
+		if(activeLayer.nextSibling == null)
+			successor = activeLayer.previousSibling;
+		else
+			successor = activeLayer.nextSibling;
+		
+		sketch.removeChild(activeLayer);
+		
+		activeLayer = successor;
+		activeContext = activeLayer.getContext('2d');
+		console.log(activeLayer);
+		addActiveListeners();
+		adjustZIndex();
 		saveInstance();
 	}
 }
 
-function moveLayerDown() {
-	var layerCollection = container.getChildren();
-	var layerArray = layerCollection.list;
+function removeActiveListeners() {
+	activeLayer.removeEventListener('mousemove', function(e) {
+		mouse.x = typeof e.offsetX !== 'undefined' ? e.offsetX : e.layerX;
+		mouse.y = typeof e.offsetY !== 'undefined' ? e.offsetY : e.layerY;
+	}, false);
 
-	if (currentIndex != 0) {
-		var temp = layerArray[currentIndex];
-		temp.hide();
-		layerArray[currentIndex] = layerArray[currentIndex - 1];
-		layerArray[currentIndex].hide();
-		layerArray[currentIndex - 1] = temp;
-		layerArray[currentIndex - 1].show();
-		layerArray[currentIndex].show();
+	activeLayer.removeEventListener('mousedown', function(e) {
+		findxy('down', e)
+	}, false);
+	activeLayer.removeEventListener('mouseup', function(e) {
+		findxy('up', e)
+	}, false);
+}
+
+function addActiveListeners() {
+	activeLayer.addEventListener('mousemove', function(e) {
+		mouse.x = typeof e.offsetX !== 'undefined' ? e.offsetX : e.layerX;
+		mouse.y = typeof e.offsetY !== 'undefined' ? e.offsetY : e.layerY;
+	}, false);
+
+	activeLayer.addEventListener('mousedown', function(e) {
+		findxy('down', e)
+	}, false);
+	activeLayer.addEventListener('mouseup', function(e) {
+		findxy('up', e)
+	}, false);
+}
+
+function adjustZIndex() {
+	var i = 1;
+	while(i<sketch.childNodes.length)
+	{
+		sketch.childNodes[i].style.zIndex = i;
+		i++;
+	}
+}
+
+function moveLayerUp() {
+	if(activeLayer.nextSibling != null)
+	{
+		var successor;
+		successor = activeLayer.nextSibling;
+		sketch.removeChild(activeLayer);
+		sketch.insertBefore(activeLayer, successor.nextSibling);
+		adjustZIndex();
 		saveInstance();
+		console.log(sketch.childNodes);
+	}
+}
+
+function moveLayerDown() {
+	if(sketch.childNodes.length > 2)
+	{
+		var successor;
+		successor = activeLayer.previousSibling;
+		sketch.removeChild(activeLayer);
+		sketch.insertBefore(activeLayer, successor);
+		adjustZIndex();
+		saveInstance();
+		console.log(sketch.childNodes);
 	}
 }

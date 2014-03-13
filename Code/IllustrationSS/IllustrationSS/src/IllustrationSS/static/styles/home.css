@@ -46,18 +46,14 @@ nav li:hover {
     margin-left: auto;
     margin-right: auto;
     background-image: url(/static/images/Background.png);
+    	cursor: crosshair;
     top:100px;
 }
 
 #canvas {
-    cursor: url(/static/images/PaintBrush.png),auto;
-}
-
-#tmp_canvas {
-	position: absolute;
-	left: 0px; right: 0;
-	bottom: 0; top: 0;
-	cursor: crosshair;
+	position: relative;
+    background:transparent;
+    z-index: 1;
 }
 
 #toolbox {
